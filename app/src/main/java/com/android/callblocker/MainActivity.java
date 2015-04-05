@@ -2,29 +2,38 @@ package com.android.callblocker;
 
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.BaseBundle;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.ActionBarActivity;
+
 import android.util.Log;
 import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.kalypzo.ui.fab.FloatingActionButton;
 
-import java.util.ArrayList;
+import com.kalypzo.ui.fab.FloatingActionButton;
 
 
 public class MainActivity extends ActionBarActivity  implements	OnClickListener,LoaderCallbacks<Cursor>{
@@ -42,6 +51,17 @@ public class MainActivity extends ActionBarActivity  implements	OnClickListener,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d("shyam :", "shyamy");
+        
+        if(isTablet(this))
+		{
+			getSupportActionBar().setTitle("CallBlocker-Tablet");
+			getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#EE9000")));
+		}
+		else
+		{
+			getSupportActionBar().setTitle("CallBlocker-Phone");
+			getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#F44336")));	
+		}
         setContentView(R.layout.primlist);
         DB db=new DB(context);
         ls = (ListView)findViewById(R.id.listPrim);
@@ -49,6 +69,7 @@ public class MainActivity extends ActionBarActivity  implements	OnClickListener,
         FloatingActionButton floatingActionButton = (FloatingActionButton)findViewById(R.id.button_floating_action);
         floatingActionButton.attachToListView(ls);
         floatingActionButton.setOnClickListener(this);
+
         //db.addContact(new Contact("Ravi", "9100000000"));
         
         
@@ -65,7 +86,6 @@ public class MainActivity extends ActionBarActivity  implements	OnClickListener,
                        */
                  // Toast.makeText(getBaseContext(),
                  //      "Javacodegeeks: " + uri.toString() + " inserted!", Toast.LENGTH_LONG).show();
-
 
      
         Log.d("Reading: ", "Reading all contacts..");
@@ -135,7 +155,7 @@ public class MainActivity extends ActionBarActivity  implements	OnClickListener,
 		switch(v.getId())
 		{
 		case R.id.button_floating_action:
-			Intent i=new Intent(MainActivity.this,Add.class);
+			Intent i=new Intent(MainActivity.this,Addname.class);
 			startActivity(i);
 			break;
 		}
@@ -146,6 +166,7 @@ public class MainActivity extends ActionBarActivity  implements	OnClickListener,
 	 /** A callback method invoked by the loader when initLoader() is called */
     @Override
     public android.support.v4.content.Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
+    	
         Uri uri = CoProvider.CONTENT_URI;
         return new CursorLoader(this, uri, null, null, null, null);
     	
@@ -221,11 +242,18 @@ public class MainActivity extends ActionBarActivity  implements	OnClickListener,
 		
 		// TODO Auto-generated method stub
 		super.onResume();
+		
 		//mAdapter.getCursor().requery();
 		getSupportLoaderManager().restartLoader(0, null, this);
 		mAdapter.notifyDataSetChanged();
 
 
+	}
+	
+	public boolean isTablet(Context context) {
+	    boolean xlarge = ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_XLARGE);
+	    boolean large = ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE);
+	    return (xlarge || large);
 	}
 
 }

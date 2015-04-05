@@ -20,10 +20,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:layout_gravity="bottom|right"
-        android:src="@drawable/new_msg"
+        android:layout_gravity="bottom|center"
+        android:src="@drawable/add"
         fab:fab_colorNormal="@android:color/holo_red_dark"
-        fab:fab_colorPressed="@android:color/holo_red_light" />
+        fab:fab_colorPressed="@android:color/holo_red_light" 
+        />
    
    
          

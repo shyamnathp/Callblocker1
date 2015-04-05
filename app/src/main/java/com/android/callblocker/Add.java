@@ -1,14 +1,26 @@
 package com.android.callblocker;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import android.annotation.SuppressLint;
+import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.BaseColumns;
-import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.PhoneLookup;
+import android.provider.ContactsContract.CommonDataKinds.Phone;
+import android.provider.SyncStateContract.Constants;
 import android.support.v7.app.ActionBarActivity;
+import android.telephony.gsm.SmsManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -23,10 +35,7 @@ import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-public class Add extends ActionBarActivity {
+@SuppressLint("NewApi") public class Add extends ActionBarActivity {
 	public static StringBuilder numbers;
 	ImageButton btnSendSMS;
 	EditText txtPhoneNo;
@@ -34,6 +43,17 @@ public class Add extends ActionBarActivity {
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		if(isTablet(this))
+		{
+			getSupportActionBar().setTitle("CallBlocker-Tablet");
+			getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#EE9000")));
+		}
+		else
+		{
+			getSupportActionBar().setTitle("CallBlocker-Phone");
+			getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#F44336")));	
+		}
 		setContentView(R.layout.sms);
 		// getActionBar().setDisplayShowHomeEnabled(false); // remove app icon
 		//getSupportActionBar().setHomeButtonEnabled(true);
@@ -88,7 +108,8 @@ public class Add extends ActionBarActivity {
 			int typeInt = cursor.getInt(3); // Phone.TYPE
 			CharSequence type = Phone.getTypeLabel(con.getResources(), typeInt, null);
 			((TextView) view).setSingleLine(false);
-			((TextView) view).setText(cursor.getString(1) + "\n" + cursor.getString(2)
+			((TextView) view).setText(cursor.getString(1) 
+					+ "\n" + cursor.getString(2)
 					+ " " + type);
 		}
 
@@ -96,6 +117,7 @@ public class Add extends ActionBarActivity {
 		public String convertToString(Cursor cursor) 
 		{
 			return (cursor.getString(1)+"("+cursor.getString(2)+")");
+			//return (cursor.getString(2));
 		}
 
 		@Override
@@ -118,22 +140,54 @@ public class Add extends ActionBarActivity {
 			public void onClick(View v) {
 				String phoneNo = txtPhoneNo.getText().toString();
 				Log.d("num", phoneNo);
-				Matcher m = Pattern.compile("\\(([^)]+)\\)").matcher(phoneNo);//get value inside the parenthesis
+				
+				int count = phoneNo.length() - phoneNo.replace(",", "").length();
+				if((count-1)>0)
+				{
+					Log.d("times", "mre dan 2");
+				}
+				if(count==0 & !Character.isDigit(phoneNo.charAt(0)))
+				{
+					Toast.makeText(getBaseContext(),
+							"enter from contacts",
+							Toast.LENGTH_SHORT).show();
+				}
+				else
+				{
+				String[] splitted=phoneNo.split(", ");
+				for(int i=0;i<(splitted.length);++i)
+				Log.d("hi", splitted[i]);
+				for(int i=0;i<(splitted.length);++i)
+				{
+				Matcher m = Pattern.compile("\\(([^)]+)\\)").matcher(splitted[i]);//get value inside the parenthesis
 				String ph = null;
+				//ph=phoneNo;
+				if(Character.isAlphabetic(splitted[i].charAt(0)))
+				{
 			     while(m.find()) {
 			      ph= m.group(1).replaceAll("-","");
+				  ph.replaceAll("-", "");
 			      ph.replaceAll(" ","");
 			      ph.replace("+91","");
 			      Log.d("sms",ph);
 			     }
+				}
+				else
+				{
+					ph=txtPhoneNo.getText().toString();
+				}
 				//String message = txtMessage.getText().toString();
+			     
 				if (pollIsValid(ph.toString()))
 				{
 					//sendSMS(ph.toString(), message);
 					DB db=new DB(context);
 					String name=getName(ph);
-					if(name.equals(null))
+					
+					if(Character.isDigit(name.charAt(1)))
 						name="unknown";
+					
+					Log.d("name", name);
 					Toast.makeText(getBaseContext(),
 							"Added to database",
 							Toast.LENGTH_SHORT).show();
@@ -143,8 +197,13 @@ public class Add extends ActionBarActivity {
 					Toast.makeText(getBaseContext(),
 							"enter phone number",
 							Toast.LENGTH_SHORT).show();
+						
 			}
+			}
+			}
+			
 		};
+		
 	}
 
 	private boolean pollIsValid(String phoneNo) {
@@ -171,4 +230,10 @@ public class Add extends ActionBarActivity {
 		return contactName;
 	}
 
+	public boolean isTablet(Context context) {
+	    boolean xlarge = ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_XLARGE);
+	    boolean large = ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE);
+	    return (xlarge || large);
+	}
 }
+

@@ -20,12 +20,12 @@
 	
 		<MultiAutoCompleteTextView 
 		    android:id="@+id/txtPhoneNo" 
-			android:textSize="18sp"
+			android:textSize="20sp"
 			android:layout_margin="8dp"
 			android:layout_width="0px"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
-			android:hint="Search" />
+			android:hint="Enter Contact Name" />
 	</LinearLayout>
 	<LinearLayout
 		android:layout_width="fill_parent"
