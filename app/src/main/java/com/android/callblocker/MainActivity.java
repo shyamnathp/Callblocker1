@@ -155,7 +155,7 @@ public class MainActivity extends ActionBarActivity  implements	OnClickListener,
 		switch(v.getId())
 		{
 		case R.id.button_floating_action:
-			Intent i=new Intent(MainActivity.this,Addname.class);
+			Intent i=new Intent(MainActivity.this,Add.class);
 			startActivity(i);
 			break;
 		}
