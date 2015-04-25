@@ -50,7 +50,7 @@ public class MainActivity extends ActionBarActivity  implements	OnClickListener,
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("shyam :", "shyamy");
+       
         
         if(isTablet(this))
 		{
@@ -70,35 +70,10 @@ public class MainActivity extends ActionBarActivity  implements	OnClickListener,
         floatingActionButton.attachToListView(ls);
         floatingActionButton.setOnClickListener(this);
 
-        //db.addContact(new Contact("Ravi", "9100000000"));
-        
-        
-        // Add a new record
-        /*          ContentValues values = new ContentValues();
-                  values.put(ConProvider.NAME,
-                       "Ravi");
-                  values.put(ConProvider.BIRTHDAY,
-                    "9847822351");
-
-                  Uri uri = getContentResolver().insert(
-                       ConProvider.CONTENT_URI, values);
-                       
-                       */
-                 // Toast.makeText(getBaseContext(),
-                 //      "Javacodegeeks: " + uri.toString() + " inserted!", Toast.LENGTH_LONG).show();
-
-     
-        Log.d("Reading: ", "Reading all contacts..");
-		
         
         if(!db.checkDBIsNull())
 			Log.d("database", "notnull");
-		/*ls.setScrollingCacheEnabled(false);
-		adapter.notifyDataSetChanged();
 		
-		
-        */
-        //db.addContact(new Contact("shyam","985678"));
         
         if(!db.checkDBIsNull())
         	Log.d("database", "cool");
@@ -195,8 +170,7 @@ public class MainActivity extends ActionBarActivity  implements	OnClickListener,
 	public boolean onContextItemSelected(MenuItem item)
 	{
 		// TODO Auto-generated method stub
-		// AdapterView.AdapterContextMenuInfo cmi =
-		// (AdapterView.AdapterContextMenuInfo) item.getMenuInfo ();
+		
 
 		if (item.getTitle() == "Delete") {
 			DB db = new DB(context);
