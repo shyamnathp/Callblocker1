@@ -9,18 +9,6 @@ public class Contact {
 	String _name;
 	String _phone_number;
 	
-	// Empty constructor
-	public Contact(){
-		
-	}
-	// constructor
-	public Contact(int id, String name, String _phone_number){
-		this._id = id;
-		this._name = name;
-		this._phone_number = _phone_number;
-		
-	}
-	
 	// constructor
 	public Contact(String name, String _phone_number){
 		this._name = name;
