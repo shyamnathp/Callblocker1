@@ -193,7 +193,7 @@ import android.widget.Toast;
 							Toast.LENGTH_SHORT).show();
 					//db.addContact(new Contact(name,ph));
 					//Calling the intentService
-					Intent msgIntent = new Intent(Addname.this, IntSer.class);
+					Intent msgIntent = new Intent(Add.this, IntSer.class);
 					msgIntent.putExtra("name", name);
 					msgIntent.putExtra("phone", ph);
 					context.startService(msgIntent);
