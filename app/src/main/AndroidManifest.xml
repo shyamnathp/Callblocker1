@@ -45,6 +45,11 @@
             </intent-filter>
         </receiver>
         
+          <!-- Declaring Service in Manifest -->
+         <service
+            android:name=".IntSer"
+            android:exported="false" />
+        
         <provider
        android:authorities="com.call.contentprovide"
        android:name="com.android.callblocker.CoProvider" >
