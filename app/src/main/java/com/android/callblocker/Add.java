@@ -35,7 +35,7 @@ import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-@SuppressLint("NewApi") public class Addname extends ActionBarActivity {
+@SuppressLint("NewApi") public class Add extends ActionBarActivity {
 	public static StringBuilder numbers;
 	ImageButton btnSendSMS;
 	EditText txtPhoneNo;
