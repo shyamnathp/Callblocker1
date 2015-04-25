@@ -71,13 +71,6 @@ public class MainActivity extends ActionBarActivity  implements	OnClickListener,
         floatingActionButton.setOnClickListener(this);
 
         
-        if(!db.checkDBIsNull())
-			Log.d("database", "notnull");
-		
-        
-        if(!db.checkDBIsNull())
-        	Log.d("database", "cool");
-        
         mAdapter = new SimpleCursorAdapter(context,
                 R.layout.convitem,
                 null,
@@ -151,7 +144,7 @@ public class MainActivity extends ActionBarActivity  implements	OnClickListener,
     /** A callback method, invoked after the requested content provider returned all the data */
     @Override
     public void onLoadFinished(android.support.v4.content.Loader<Cursor> arg0, Cursor arg1) {
-    	//Log.d("shyam", arg1.getString(arg1.getColumnIndex(DB.KEY_NAME)));
+    	
     	if(mAdapter!=null && arg1!=null)
         mAdapter.swapCursor(arg1);
     	else
