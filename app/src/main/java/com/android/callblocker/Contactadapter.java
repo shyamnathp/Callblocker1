@@ -80,20 +80,7 @@ public class Contactadapter extends ArrayAdapter<Contact> {
 		//viewHolder.name.setTypeface(type);
 		
 		viewHolder.num.setText(Contact.getPhoneNumber());
-		//viewHolder.num.setVisibility(View.INVISIBLE);
 		
-		//viewHolder.id.setText(getid(Contact.getPhoneNumber()));
-		//viewHolder.id.setVisibility(View.INVISIBLE);
-		
-		
-		//viewHolder.body.setTypeface(type);
-		
-		// Return the completed view to render on screen
-		/*
-		Animation animationY=new TranslateAnimation(0,0,viewHolder.rl.getHeight()/4,0);
-		animationY.setDuration(500);
-		convertView.startAnimation(animationY);
-		animationY=null;*/
 		return convertView;
 	}
 	
