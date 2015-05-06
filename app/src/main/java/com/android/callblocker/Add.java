@@ -55,7 +55,11 @@ import android.widget.Toast;
 			getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#F44336")));	
 		}
 		setContentView(R.layout.sms);
-		
+		// getActionBar().setDisplayShowHomeEnabled(false); // remove app icon
+		//getSupportActionBar().setHomeButtonEnabled(true);
+		//getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		//getSupportActionBar().setBackgroundDrawable(
+				//new ColorDrawable(Color.parseColor("#00CFEE")));
 
 		btnSendSMS = (ImageButton) findViewById(R.id.btnSendSMS);
 		txtPhoneNo = (EditText) findViewById(R.id.txtPhoneNo);
@@ -188,6 +192,7 @@ import android.widget.Toast;
 							"Added to database",
 							Toast.LENGTH_SHORT).show();
 					db.addContact(new Contact(name,ph));
+					
 					
 					
 					}
