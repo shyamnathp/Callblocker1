@@ -2,11 +2,18 @@ package com.android.callblocker;
 
 
 
+import info.callblocker.loginandregistration.LoginActivity;
+import info.callblocker.loginandregistration.helper.SQLiteHandler;
+import info.callblocker.loginandregistration.helper.SessionManager;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -31,26 +38,29 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ListView;
-
+import android.widget.TextView;
 
 import com.kalypzo.ui.fab.FloatingActionButton;
 
 
-public class MainActivity extends ActionBarActivity  implements	OnClickListener,LoaderCallbacks<Cursor>{
+public class MainActivity extends  ActionBarActivity implements	OnClickListener,LoaderCallbacks<Cursor>{
 
 	ListView ls;
 	LoaderManager lm;
 	private LoaderManager.LoaderCallbacks<Cursor> mCallbacks;
 	Context context=this;
 	Cursor cursor;
-	
+	TextView txtName;
+	private SQLiteHandler dbe;
+	private SessionManager session;
 	//DB d=new DB(context);
 	ArrayList<Contact> list= new ArrayList<Contact>();
 	SimpleCursorAdapter mAdapter;
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       
+        Log.d("shyam :", "shyamy");
         
         if(isTablet(this))
 		{
@@ -64,12 +74,38 @@ public class MainActivity extends ActionBarActivity  implements	OnClickListener,
 		}
         setContentView(R.layout.primlist);
         DB db=new DB(context);
+        txtName = (TextView) findViewById(R.id.name);
         ls = (ListView)findViewById(R.id.listPrim);
-        
+        	
         FloatingActionButton floatingActionButton = (FloatingActionButton)findViewById(R.id.button_floating_action);
         floatingActionButton.attachToListView(ls);
         floatingActionButton.setOnClickListener(this);
 
+        Log.d("Reading: ", "Reading all contacts..");
+		
+     // SqLite database handler
+     		dbe = new SQLiteHandler(getApplicationContext());
+
+     		// session manager
+     		session = new SessionManager(getApplicationContext());
+
+     		if (!session.isLoggedIn()) {
+     			logoutUser();
+     		}
+
+     		// Fetching user details from sqlite
+     		HashMap<String, String> user = dbe.getUserDetails();
+
+     		String name = user.get("name");
+     		String email = user.get("email");
+     		
+     		txtName.setText("Welcome, "+name);
+        
+        if(!db.checkDBIsNull())
+			Log.d("database", "notnull");
+        
+        if(!db.checkDBIsNull())
+        	Log.d("database", "cool");
         
         mAdapter = new SimpleCursorAdapter(context,
                 R.layout.convitem,
@@ -97,26 +133,7 @@ public class MainActivity extends ActionBarActivity  implements	OnClickListener,
 	}
 
 
-	@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-
+	
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -144,7 +161,7 @@ public class MainActivity extends ActionBarActivity  implements	OnClickListener,
     /** A callback method, invoked after the requested content provider returned all the data */
     @Override
     public void onLoadFinished(android.support.v4.content.Loader<Cursor> arg0, Cursor arg1) {
-    	
+    	//Log.d("shyam", arg1.getString(arg1.getColumnIndex(DB.KEY_NAME)));
     	if(mAdapter!=null && arg1!=null)
         mAdapter.swapCursor(arg1);
     	else
@@ -163,7 +180,8 @@ public class MainActivity extends ActionBarActivity  implements	OnClickListener,
 	public boolean onContextItemSelected(MenuItem item)
 	{
 		// TODO Auto-generated method stub
-		
+		// AdapterView.AdapterContextMenuInfo cmi =
+		// (AdapterView.AdapterContextMenuInfo) item.getMenuInfo ();
 
 		if (item.getTitle() == "Delete") {
 			DB db = new DB(context);
@@ -176,7 +194,7 @@ public class MainActivity extends ActionBarActivity  implements	OnClickListener,
 			
 			Contact silinen=new Contact(cursor.getString(cursor.getColumnIndex("cust_name")),cursor.getString(cursor.getColumnIndex("cust_phone")));  
 		   
-			//Contact silinen = mAdapter.getItem(info.position);
+			
 			Log.d("hi",cursor.getString(cursor.getColumnIndex("cust_name")) );
 			db.deleteContact(silinen);
 			cursor.requery();
@@ -221,6 +239,47 @@ public class MainActivity extends ActionBarActivity  implements	OnClickListener,
 	    boolean xlarge = ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_XLARGE);
 	    boolean large = ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE);
 	    return (xlarge || large);
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle action bar item clicks here. The action bar will
+		// automatically handle clicks on the Home/Up button, so long
+		// as you specify a parent activity in AndroidManifest.xml.
+		int id = item.getItemId();
+		if (id == R.id.logout) {
+			logoutUser();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	/**
+	 * Logging out the user. Will set isLoggedIn flag to false in shared
+	 * preferences Clears the user data from sqlite users table
+	 * */
+	private void logoutUser() {
+		session.setLogin(false);
+
+		dbe.deleteUsers();
+
+		// Launching the login activity
+		ComponentName receiver = new ComponentName(context, IncomingCallReciever.class);
+
+		PackageManager pm = context.getPackageManager();
+
+		pm.setComponentEnabledSetting(receiver,
+		        PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+		        PackageManager.DONT_KILL_APP);
+		Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+		startActivity(intent);
+		finish();
 	}
 
 }
