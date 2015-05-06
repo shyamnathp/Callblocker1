@@ -8,23 +8,42 @@
     android:background="#FFFFFF"
     android:orientation="vertical">
 
-    <ListView
+    <LinearLayout
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:orientation="vertical">
+		<TextView
+            android:id="@+id/name"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="5dp"
+            android:textSize="20sp"
+            android:background="@drawable/image"
+            android:lines="1"
+            android:textColor="#ffffff"
+            android:text="hello"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:gravity="center"/>
+         />
+        <ListView
         android:id="@+id/listPrim"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:divider="@null"
         android:dividerHeight="0dp"
          />
+           
+    </LinearLayout>
      <com.kalypzo.ui.fab.FloatingActionButton
         android:id="@+id/button_floating_action"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:layout_gravity="bottom|center"
-        android:src="@drawable/add"
+        android:layout_gravity="bottom|right"
+        android:src="@drawable/new_msg"
         fab:fab_colorNormal="@android:color/holo_red_dark"
-        fab:fab_colorPressed="@android:color/holo_red_light" 
-        />
+        fab:fab_colorPressed="@android:color/holo_red_light" />
    
    
          

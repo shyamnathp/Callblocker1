@@ -187,12 +187,7 @@ import android.widget.Toast;
 					Toast.makeText(getBaseContext(),
 							"Added to database",
 							Toast.LENGTH_SHORT).show();
-					//db.addContact(new Contact(name,ph));
-					//Calling the intentService
-					Intent msgIntent = new Intent(Add.this, IntSer.class);
-					msgIntent.putExtra("name", name);
-					msgIntent.putExtra("phone", ph);
-					context.startService(msgIntent);
+					db.addContact(new Contact(name,ph));
 					
 					
 					}
