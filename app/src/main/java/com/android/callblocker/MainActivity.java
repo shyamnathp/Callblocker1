@@ -2,9 +2,6 @@ package com.android.callblocker;
 
 
 
-import info.callblocker.loginandregistration.LoginActivity;
-import info.callblocker.loginandregistration.helper.SQLiteHandler;
-import info.callblocker.loginandregistration.helper.SessionManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,6 +37,9 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.callblocker.loginandregistration.LoginActivity;
+import com.callblocker.loginandregistration.helper.SQLiteHandler;
+import com.callblocker.loginandregistration.helper.SessionManager;
 import com.kalypzo.ui.fab.FloatingActionButton;
 
 
