@@ -138,15 +138,21 @@ import android.widget.Toast;
 	private OnClickListener getNewSendSmsListener() {
 		return new View.OnClickListener() {
 			public void onClick(View v) {
-				String phoneNo = txtPhoneNo.getText().toString();
-				Log.d("num", phoneNo);
+				String phoneNo=null;
+				phoneNo = txtPhoneNo.getText().toString();
 				
 				int count = phoneNo.length() - phoneNo.replace(",", "").length();
 				if((count-1)>0)
 				{
 					Log.d("times", "mre dan 2");
 				}
-				if(count==0 & !Character.isDigit(phoneNo.charAt(0)))
+				else if(phoneNo.length()==0)
+				{
+					Toast.makeText(getBaseContext(),
+							"enter from contacts",
+							Toast.LENGTH_SHORT).show();
+				}
+				else if(count==0 & !Character.isDigit(phoneNo.charAt(0)))
 				{
 					Toast.makeText(getBaseContext(),
 							"enter from contacts",
