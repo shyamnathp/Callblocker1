@@ -142,11 +142,7 @@ import android.widget.Toast;
 				phoneNo = txtPhoneNo.getText().toString();
 				
 				int count = phoneNo.length() - phoneNo.replace(",", "").length();
-				if((count-1)>0)
-				{
-					Log.d("times", "mre dan 2");
-				}
-				else if(phoneNo.length()==0)
+				if(phoneNo.length()==0)
 				{
 					Toast.makeText(getBaseContext(),
 							"enter from contacts",
